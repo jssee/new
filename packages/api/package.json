@@ -1,0 +1,25 @@
+{
+  "name": "@app/api",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/router.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@app/auth": "workspace:*",
+    "@app/db": "workspace:*",
+    "@orpc/contract": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "drizzle-orm": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "typescript": "catalog:"
+  }
+}

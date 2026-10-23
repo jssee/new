@@ -1,9 +1,11 @@
 // Read by the Better Auth CLI (`bun run auth:schema`) to generate the auth
 // tables in packages/db. Generating never connects to the database.
+import { createDb } from "@app/db";
+
 import { createAuth } from "./src/index.ts";
 
 export const auth = createAuth({
   allowedHosts: ["localhost"],
-  databaseUrl: "postgresql://localhost/unused",
+  db: createDb("postgresql://localhost/unused"),
   secret: "unused-because-generating-never-signs-anything",
 });

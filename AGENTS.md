@@ -2,8 +2,8 @@
 
 ## Architecture
 
-- `apps/web` renders UI and reaches the API only through remote functions (`*.remote.ts`). Pages and components never call the API or the database directly.
-- `packages/api` owns product behavior and is the only layer that touches the database, apart from Better Auth's config in `packages/auth`. `apps/web` must not depend on `@app/db`; Biome fails the import.
+- `apps/web` renders UI and reaches the API only through remote functions (`*.remote.ts`), which call procedures with the `api` client from `#lib/server/api.ts`. Pages, components, loads, and hooks never call the API or the database directly; Biome fails those imports.
+- `packages/api` owns product behavior and is the only layer that queries the database, apart from Better Auth's config in `packages/auth`. A new feature is a procedure there plus a remote function here.
 - `packages/db` owns the schema and migrations. Configuration lives in `apps/web/.env.schema`; the web app passes values such as `DATABASE_URL` into the packages that need them.
 
 ## Commands

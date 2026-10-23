@@ -13,7 +13,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@app/api": "workspace:*",
     "@app/auth": "workspace:*",
+    "@app/db": "workspace:*",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/valibot": "catalog:",
     "better-auth": "catalog:",
     "valibot": "catalog:",
     "varlock": "catalog:"

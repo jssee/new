@@ -9,7 +9,8 @@
   {#if user}
     <p>Signed in as {user.email}</p>
     <div class="flex gap-3">
-      <Button href="/account">Account</Button>
+      <Button href="/notes">Notes</Button>
+      <Button href="/account" variant="outline">Account</Button>
       <form {...signOut}>
         <Button type="submit" variant="outline">Sign out</Button>
       </form>
