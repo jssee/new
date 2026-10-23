@@ -8,7 +8,7 @@
     "./schema": "./src/schema.ts"
   },
   "scripts": {
-    "auth:schema": "auth generate --config auth.config.ts --output ../db/src/schema/auth.ts --yes",
+    "auth:schema": "auth generate --config auth.config.ts --output ../db/src/schema/auth.ts --yes && biome format --write ../db/src/schema/auth.ts",
     "check": "tsc --noEmit"
   },
   "dependencies": {
