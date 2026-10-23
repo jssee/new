@@ -1,0 +1,8 @@
+services:
+  web:
+    # Pin Portless's app port to the one Amp assigns, so the same dev server is
+    # reachable at https://app.localhost inside the orb and through the portal.
+    command: PORTLESS_APP_PORT="$PORT" bun run dev
+    portal:
+      title: Web
+      description: Sign in as dev@example.com with password "password".

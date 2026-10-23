@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Prepares an Amp orb: the pinned Bun, dependencies, and the Portless proxy.
+# Runs once per orb snapshot; keep it idempotent and non-interactive.
+set -euo pipefail
+
+step() { printf '\n==> %s\n' "$*"; }
+
+bun_version=$(jq -r '.packageManager | ltrimstr("bun@")' package.json)
+if [[ $(bun --version) != "$bun_version" ]]; then
+  step "Installing Bun $bun_version"
+  curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr/local bash -s "bun-v$bun_version"
+fi
+
+step "Installing dependencies"
+bun install --frozen-lockfile
+
+# Portless binds port 443, which needs root. Installing it as a systemd service
+# keeps the proxy running after setup exits and in every orb from the snapshot.
+# sudo resets PATH, so pass one that includes update-ca-certificates.
+step "Installing the Portless proxy service"
+portless=apps/web/node_modules/.bin/portless
+sudo env PATH="/usr/local/sbin:/usr/sbin:/sbin:$PATH" HOME="$HOME" "$portless" trust
+"$portless" service install
+
+# db:migrate starts the dev Postgres container on first run. Docker runs under
+# systemd and the container restarts with it, so Postgres is up in every orb.
+# This shell predates the docker group membership, so pass the group to sudo.
+step "Starting Postgres and creating the database"
+sudo systemctl enable --now docker
+sudo usermod --append --groups docker "$USER"
+sudo --user "$USER" --group docker env PATH="$PATH" HOME="$HOME" bun run db:migrate
