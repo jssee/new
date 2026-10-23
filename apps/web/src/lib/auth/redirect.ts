@@ -1,5 +1,5 @@
-// Open-redirect guard for the redirectTo param that requireSession adds and
-// the sign-in and sign-up forms send back. Returns the same-origin path, or
+// Open-redirect guard for the redirectTo param that requireSession adds, the
+// sign-in and sign-up forms send back, and the auth pages honor. Returns the same-origin path, or
 // null when the value is missing or points elsewhere.
 export function sanitizeRedirect(
   redirectTo: string | undefined,
