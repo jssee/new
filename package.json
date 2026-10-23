@@ -21,12 +21,12 @@
     }
   },
   "scripts": {
-    "build": "bun run --filter @app/web build",
-    "check": "ultracite check && bun run --filter './apps/*' --filter './packages/*' check",
-    "db:generate": "bun run --filter @app/db db:generate",
-    "db:migrate": "bun run --filter @app/db db:migrate",
-    "db:reset": "bun run --filter @app/db db:reset",
-    "db:studio": "bun run --filter @app/db db:studio",
+    "build": "bun run --cwd apps/web build",
+    "check": "ultracite check && bun run --elide-lines=0 --filter './apps/*' --filter './packages/*' check",
+    "db:generate": "bun run --cwd packages/db db:generate",
+    "db:migrate": "bun run --cwd packages/db db:migrate",
+    "db:reset": "bun run --cwd packages/db db:reset",
+    "db:studio": "bun run --cwd packages/db db:studio",
     "deploy:logs": "bun scripts/deploy-logs.ts",
     "deploy:setup": "vercel link",
     "dev": "bun run --cwd apps/web dev",
