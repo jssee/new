@@ -20,7 +20,7 @@ This package is contract-first oRPC v2 with Valibot, plus the Better Auth config
 
 - Scope every query on user data to `context.user.id`. Treat another user's resource as missing: throw `NOT_FOUND`, not `FORBIDDEN`.
 - Throw `ORPCError` with a standard code (`NOT_FOUND`, `CONFLICT`, `BAD_REQUEST`) for expected failures. Its `message` and `data` reach the client, so keep secrets and internals out of them.
-- `apps/web` calls procedures in-process from remote functions and serves them over HTTP at `/api`, with the reference UI there and the spec at `/api/spec.json`.
+- `apps/web` calls procedures in-process from remote functions and serves them over HTTP at `/api`, with the reference UI there and the spec at `/api/spec.json`. `/api/logs` belongs to the web app's browser logger, so no procedure may use the `/logs` path.
 
 ## Auth
 

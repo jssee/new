@@ -17,4 +17,5 @@
 
 - evlog emits one wide event per request from `hooks.server.ts`, with the signed-in user already on it. Add context to that event with `locals.log.set({ feature: { ... } })` instead of `console.log` or separate log lines; procedures add theirs through `context.log`.
 - `handleError` records unexpected errors; `error(...)`, 404s, and invalid remote input show up only as the response status. Options and a future drain go in `evlog.config.ts`.
+- In browser code, log with `log` from `evlog/client`. Warnings and errors, including uncaught ones, reach the server log through `/api/logs` under `client`. That endpoint keeps only the fields in its schema, so extend the schema to send more.
 - Log stable IDs, statuses, counts, and reason codes. Never log secrets, tokens, raw request bodies, or full emails.
