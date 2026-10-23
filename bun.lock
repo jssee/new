@@ -14,7 +14,6 @@
     "apps/web": {
       "name": "@app/web",
       "dependencies": {
-        "@app/db": "workspace:*",
         "varlock": "catalog:",
       },
       "devDependencies": {

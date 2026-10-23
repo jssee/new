@@ -1,5 +1,11 @@
 # Repository Rules
 
+## Architecture
+
+- `apps/web` renders UI and reaches the API only through remote functions (`*.remote.ts`). Pages and components never call the API or the database directly.
+- `packages/api` owns product behavior and is the only layer that touches the database. `apps/web` must not depend on `@app/db`; Biome fails the import.
+- `packages/db` owns the schema and migrations. Configuration lives in `apps/web/.env.schema`; the web app passes values such as `DATABASE_URL` into the packages that need them.
+
 ## Commands
 
 - `bun run check` verifies a change: lint, format, type checks, and an env audit. Run it before you finish; it must pass.
