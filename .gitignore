@@ -8,6 +8,9 @@ build
 .vercel
 vite.config.ts.timestamp-*
 
+# Amp orb portal state, generated per thread
+.amp/portals/
+
 # Local env files
 .env
 .env.*

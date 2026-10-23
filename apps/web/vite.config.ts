@@ -18,4 +18,9 @@ export default defineConfig({
       experimental: { remoteFunctions: true },
     }),
   ],
+  server: {
+    // Portless replaces the variable Amp uses to allow its portal hostname, so
+    // allow every host inside an orb. Never outside one.
+    allowedHosts: process.env.AMP_ORB ? true : undefined,
+  },
 });
