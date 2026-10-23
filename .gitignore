@@ -1,3 +1,13 @@
 node_modules
 .DS_Store
 *.log
+
+# SvelteKit and Vercel output
+.svelte-kit
+build
+.vercel
+vite.config.ts.timestamp-*
+
+# Local env files
+.env
+.env.*

@@ -7,7 +7,9 @@
     "packages/*"
   ],
   "scripts": {
-    "check": "ultracite check",
+    "build": "bun run --filter @app/web build",
+    "check": "ultracite check && bun run --filter './apps/*' --filter './packages/*' check",
+    "dev": "bun run --filter @app/web dev",
     "fix": "ultracite fix",
     "prepare": "lefthook install"
   },
