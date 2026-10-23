@@ -8,7 +8,9 @@
       "packages/*"
     ],
     "catalog": {
+      "better-auth": "^1.7.12",
       "typescript": "^6.0.3",
+      "valibot": "^1.5.0",
       "varlock": "^1.23.0"
     }
   },

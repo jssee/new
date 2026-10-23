@@ -5,3 +5,4 @@ services:
     command: PORTLESS_APP_PORT="$PORT" bun run dev
     portal:
       title: Web
+      description: Sign in as dev@example.com with password "password".

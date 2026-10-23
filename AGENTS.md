@@ -3,7 +3,7 @@
 ## Architecture
 
 - `apps/web` renders UI and reaches the API only through remote functions (`*.remote.ts`). Pages and components never call the API or the database directly.
-- `packages/api` owns product behavior and is the only layer that touches the database. `apps/web` must not depend on `@app/db`; Biome fails the import.
+- `packages/api` owns product behavior and is the only layer that touches the database, apart from Better Auth's config in `packages/auth`. `apps/web` must not depend on `@app/db`; Biome fails the import.
 - `packages/db` owns the schema and migrations. Configuration lives in `apps/web/.env.schema`; the web app passes values such as `DATABASE_URL` into the packages that need them.
 
 ## Commands
@@ -14,6 +14,7 @@
 - In an Amp orb, the dev server is the `web` service in `.amp/services.yaml`: start it with `amp orb services ensure`, not `bun run dev`. It serves both `https://app.localhost` and the portal URL.
 - If `bun run dev` fails with "Proxy is not running", the Portless proxy isn't installed on this machine. It needs sudo, so ask the user to run `bunx portless service install` once; meanwhile `PORTLESS=0 bun run dev` serves plain Vite.
 - `bun run db:migrate` starts the local Postgres container if needed, creates this checkout's database, and applies migrations. Run it in a fresh checkout or worktree and after pulling migrations. `bun run db:reset` drops and recreates the local database.
+- Local databases are seeded with a user: sign in as `dev@example.com` with password `password`.
 - The pre-commit hook fixes staged files and blocks commits that contain a secret value. Never skip it (`--no-verify`) unless explicitly told to.
 
 ## Environment

@@ -13,6 +13,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@app/auth": "workspace:*",
+    "better-auth": "catalog:",
+    "valibot": "catalog:",
     "varlock": "catalog:"
   },
   "devDependencies": {

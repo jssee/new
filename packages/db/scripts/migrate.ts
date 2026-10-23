@@ -1,13 +1,15 @@
 // Applies migrations to DATABASE_URL.
 //
 // For a local URL it first makes sure the dev Postgres server is running and
-// the checkout's database exists, so a fresh worktree needs only this command.
-// With --reset it drops the local database first. It never creates or drops a
-// remote database.
-import { $, file, sleep } from "bun";
+// the checkout's database exists, and seeds it afterwards, so a fresh worktree
+// needs only this command. With --reset it drops the local database first. It
+// never creates, drops, or seeds a remote database.
+import { $, sleep } from "bun";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Client } from "pg";
+
+import { DEV_USER, seed } from "./seed.ts";
 
 // One dev server per machine, shared by every project made from this template;
 // each project and worktree gets its own database on it.
@@ -35,17 +37,16 @@ if (isLocal) {
   await prepareLocalDatabase();
 }
 
-const migrationsFolder = new URL("../migrations", import.meta.url).pathname;
-// drizzle-kit writes the journal with the first migration; until a table
-// exists there is nothing to apply.
-if (await file(`${migrationsFolder}/meta/_journal.json`).exists()) {
-  const db = drizzle(databaseUrl);
-  await migrate(db, { migrationsFolder });
-  await db.$client.end();
-  console.log(`Migrated ${target.pathname.slice(1)} on ${target.host}`);
-} else {
-  console.log("No migrations yet. Add a table and run bun run db:generate.");
+const db = drizzle(databaseUrl);
+await migrate(db, {
+  migrationsFolder: new URL("../migrations", import.meta.url).pathname,
+});
+console.log(`Migrated ${target.pathname.slice(1)} on ${target.host}`);
+if (isLocal) {
+  await seed(db);
+  console.log(`Seeded ${DEV_USER.email} with password "${DEV_USER.password}"`);
 }
+await db.$client.end();
 
 async function prepareLocalDatabase() {
   const server = new URL(target);
