@@ -1,0 +1,7 @@
+# Local env files must never ship in deployments. Vercel project env vars are
+# the source of truth; otherwise local values could leak into the deployment.
+.env
+.env.*
+**/.env
+**/.env.*
+!**/.env.schema

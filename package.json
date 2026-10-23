@@ -27,15 +27,20 @@
     "db:migrate": "bun run --filter @app/db db:migrate",
     "db:reset": "bun run --filter @app/db db:reset",
     "db:studio": "bun run --filter @app/db db:studio",
+    "deploy:logs": "bun scripts/deploy-logs.ts",
+    "deploy:setup": "vercel link",
     "dev": "bun run --filter @app/web dev",
+    "env:preview": "bun scripts/sync-vercel-env.ts preview",
+    "env:production": "bun scripts/sync-vercel-env.ts production",
     "fix": "ultracite fix",
-    "prepare": "lefthook install"
+    "prepare": "git rev-parse --git-dir > /dev/null 2>&1 || exit 0; lefthook install"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.15",
     "lefthook": "^2.2.2",
     "ultracite": "8.0.2",
-    "varlock": "catalog:"
+    "varlock": "catalog:",
+    "vercel": "^65.2.0"
   },
   "packageManager": "bun@1.4.4"
 }

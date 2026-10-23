@@ -1,5 +1,6 @@
 // Prints this checkout's DATABASE_URL on the local dev Postgres server.
-// apps/web/.env.schema runs it to default DATABASE_URL outside deployments.
+// apps/web/.env.schema runs it to default DATABASE_URL outside deployments,
+// which must set DATABASE_URL themselves.
 //
 // The main checkout's database is named after the project (the root
 // package.json name). A linked git worktree gets its own database named after
@@ -11,12 +12,6 @@ import rootPackage from "../../../package.json" with { type: "json" };
 
 const SERVER = "postgresql://postgres:postgres@localhost:5432";
 const DEFAULT_BRANCHES = new Set(["", "main", "master"]);
-
-// Deployments must set DATABASE_URL themselves. Printing nothing makes varlock
-// fail validation instead of pointing a deployment at localhost.
-if (process.env.VERCEL) {
-  process.exit(0);
-}
 
 const git = async (...args: string[]) => (await $`git ${args}`.text()).trim();
 

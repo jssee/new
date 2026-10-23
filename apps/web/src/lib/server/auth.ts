@@ -5,7 +5,7 @@ import { getRequestEvent } from "$app/server";
 import { db } from "./db.ts";
 
 export const auth = createAuth({
-  allowedHosts: ENV.BETTER_AUTH_ALLOWED_HOSTS.split(","),
+  allowedHosts: ENV.BETTER_AUTH_ALLOWED_HOSTS.split(",").filter(Boolean),
   db,
   // Lets auth.api calls in remote functions set the session cookie.
   plugins: [sveltekitCookies(getRequestEvent)],

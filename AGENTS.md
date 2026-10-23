@@ -15,10 +15,12 @@
 - If `bun run dev` fails with "Proxy is not running", the Portless proxy isn't installed on this machine. It needs sudo, so ask the user to run `bunx portless service install` once; meanwhile `PORTLESS=0 bun run dev` serves plain Vite.
 - `bun run db:migrate` starts the local Postgres container if needed, creates this checkout's database, and applies migrations. Run it in a fresh checkout or worktree and after pulling migrations. `bun run db:reset` drops and recreates the local database.
 - Local databases are seeded with a user: sign in as `dev@example.com` with password `password`.
+- Pushes deploy to Vercel. When a deployment fails, run `bun run deploy:logs [branch]` (the current branch by default): it waits for the build, then prints its logs if it failed or the runtime errors if it built. It needs the repo linked once with `bun run deploy:setup`.
 - The pre-commit hook fixes staged files and blocks commits that contain a secret value. Never skip it (`--no-verify`) unless explicitly told to.
 
 ## Environment
 
 - `apps/web/.env.schema` declares every env var the web app reads, with its type and whether it is sensitive. Add a var there before using it, and read it with `ENV` from `varlock/env`, never `process.env` or `$env/*`. The audit in `bun run check` fails on undeclared or unused vars.
 - `DATABASE_URL` defaults to this checkout's own local database: `app` in the main checkout, `app_<branch>` in a linked worktree. Don't set it in `.env.local`, or worktrees will share one database.
+- Deployments read values set on Vercel. `bun run env:preview` and `bun run env:production` push the non-local values from `.env.local` and generate per-environment secrets. `DATABASE_URL` must be set there by hand; the allowed auth hosts come from Vercel's own hostnames.
 - Local values go in `apps/web/.env.local`, which is gitignored. Never print secret values; inspect config with `bunx varlock load --agent` from `apps/web`, which redacts them.
