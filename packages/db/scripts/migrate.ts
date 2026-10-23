@@ -104,6 +104,18 @@ function isServerDown(error: unknown) {
 }
 
 async function startServer() {
+  // Fail with one actionable line instead of a shell stack trace when Docker
+  // itself is unavailable, the usual reason a fresh machine can't migrate.
+  const daemon = await $`docker info --format "{{.ServerVersion}}"`
+    .quiet()
+    .nothrow();
+  if (daemon.exitCode !== 0) {
+    const reason = daemon.stderr.toString().trim().split("\n").at(-1);
+    console.error(
+      `Postgres isn't running on ${target.host}, and Docker isn't available to start it: ${reason}\nStart Docker (or OrbStack) and run this again.`
+    );
+    process.exit(1);
+  }
   console.log(`Starting the ${CONTAINER} Docker container`);
   const exists = await $`docker container inspect ${CONTAINER}`
     .quiet()
