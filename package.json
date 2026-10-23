@@ -2,10 +2,16 @@
   "name": "app",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "typescript": "^6.0.3",
+      "varlock": "^1.23.0"
+    }
+  },
   "scripts": {
     "build": "bun run --filter @app/web build",
     "check": "ultracite check && bun run --filter './apps/*' --filter './packages/*' check",
@@ -17,7 +23,7 @@
     "@biomejs/biome": "2.5.15",
     "lefthook": "^2.2.2",
     "ultracite": "8.0.2",
-    "varlock": "^1.23.0"
+    "varlock": "catalog:"
   },
   "packageManager": "bun@1.4.4"
 }
