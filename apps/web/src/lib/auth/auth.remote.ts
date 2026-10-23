@@ -5,10 +5,12 @@ import {
   minLength,
   nonEmpty,
   object,
+  optional,
   pipe,
   string,
   trim,
 } from "valibot";
+import { sanitizeRedirect } from "#lib/auth/redirect.ts";
 import { auth } from "#lib/server/auth.ts";
 import { form, getRequestEvent, query } from "$app/server";
 
@@ -22,6 +24,7 @@ const emailField = pipe(
 const signInSchema = object({
   _password: pipe(string(), nonEmpty("Enter your password.")),
   email: emailField,
+  redirectTo: optional(string()),
 });
 
 const signUpSchema = object({
@@ -29,6 +32,7 @@ const signUpSchema = object({
   _password: pipe(string(), minLength(8, "Use at least 8 characters.")),
   email: emailField,
   name: pipe(string(), trim(), nonEmpty("Enter your name.")),
+  redirectTo: optional(string()),
 });
 
 export const getUser = query(() => {
@@ -36,22 +40,28 @@ export const getUser = query(() => {
   return user ? { email: user.email, name: user.name } : null;
 });
 
-export const signIn = form(signInSchema, async ({ _password, email }) => {
-  await callAuth((headers) =>
-    auth.api.signInEmail({ body: { email, password: _password }, headers })
-  );
-  redirect(303, "/");
-});
+export const signIn = form(
+  signInSchema,
+  async ({ _password, email, redirectTo }) => {
+    await callAuth((headers) =>
+      auth.api.signInEmail({ body: { email, password: _password }, headers })
+    );
+    redirectAfterAuth(redirectTo);
+  }
+);
 
-export const signUp = form(signUpSchema, async ({ _password, email, name }) => {
-  await callAuth((headers) =>
-    auth.api.signUpEmail({
-      body: { email, name, password: _password },
-      headers,
-    })
-  );
-  redirect(303, "/");
-});
+export const signUp = form(
+  signUpSchema,
+  async ({ _password, email, name, redirectTo }) => {
+    await callAuth((headers) =>
+      auth.api.signUpEmail({
+        body: { email, name, password: _password },
+        headers,
+      })
+    );
+    redirectAfterAuth(redirectTo);
+  }
+);
 
 export const signOut = form(async () => {
   await auth.api.signOut({ headers: getRequestEvent().request.headers });
@@ -70,4 +80,12 @@ async function callAuth(call: (headers: Headers) => Promise<unknown>) {
     }
     throw error;
   }
+}
+
+// Returns to the page that asked for sign-in, if it is on this site.
+function redirectAfterAuth(redirectTo: string | undefined) {
+  redirect(
+    303,
+    sanitizeRedirect(redirectTo, getRequestEvent().url.origin) ?? "/"
+  );
 }

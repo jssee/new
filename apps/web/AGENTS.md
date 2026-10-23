@@ -10,7 +10,8 @@
 
 - `hooks.server.ts` resolves the session once per request into `locals.session`; read it there instead of calling Better Auth again.
 - Sign-in, sign-up, and sign-out are remote forms in `#lib/auth/auth.remote.ts`. Pass the request headers to every `auth.api` call; Better Auth needs them to resolve its base URL.
-- The `(protected)` layout only redirects signed-out page visits. Remote functions are separate endpoints, so private data must come from a procedure that checks the session; see `packages/api/AGENTS.md`.
+- Auth pages live in `routes/(auth)/[authtype=authtype]`; the `authtype` matcher in `src/params.ts` lists them. Add a page there by extending the matcher, not with a new route.
+- Guard each page that needs a signed-in user in its own `+page.server.ts` by calling `requireSession(event)` from `#lib/auth/session.server.ts` first in `load`. Don't guard with layout groups. Loads don't cover remote functions, so private data must come from a procedure that checks the session; see `packages/api/AGENTS.md`.
 
 ## Logging
 

@@ -10,11 +10,15 @@
     FieldSet,
   } from "#lib/components/ui/field/index.js";
   import { Input } from "#lib/components/ui/input/index.js";
+  import { page } from "$app/state";
 
   const { fields } = signUp;
+  // Where requireSession was sending the visitor; the remote function checks it.
+  const redirectTo = $derived(page.url.searchParams.get("redirectTo") ?? "");
 </script>
 
 <form {...signUp} class="mx-auto mt-16 max-w-sm">
+  <input {...fields.redirectTo.as("hidden", redirectTo)}>
   <FieldSet>
     <FieldLegend>Create an account</FieldLegend>
     <FieldGroup>
@@ -36,7 +40,9 @@
       <FieldError errors={fields.issues()} />
       <Field orientation="horizontal">
         <Button disabled={!!signUp.pending} type="submit">Sign up</Button>
-        <Button href="/sign-in" variant="link">Sign in instead</Button>
+        <Button href="/sign-in{page.url.search}" variant="link">
+          Sign in instead
+        </Button>
       </Field>
     </FieldGroup>
   </FieldSet>
