@@ -21,3 +21,11 @@ step "Installing the Portless proxy service"
 portless=apps/web/node_modules/.bin/portless
 sudo env PATH="/usr/local/sbin:/usr/sbin:/sbin:$PATH" HOME="$HOME" "$portless" trust
 "$portless" service install
+
+# db:migrate starts the dev Postgres container on first run. Docker runs under
+# systemd and the container restarts with it, so Postgres is up in every orb.
+# This shell predates the docker group membership, so pass the group to sudo.
+step "Starting Postgres and creating the database"
+sudo systemctl enable --now docker
+sudo usermod --append --groups docker "$USER"
+sudo --user "$USER" --group docker env PATH="$PATH" HOME="$HOME" bun run db:migrate
