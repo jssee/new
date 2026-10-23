@@ -14,3 +14,7 @@ vite.config.ts.timestamp-*
 # Local env files
 .env
 .env.*
+!.env.schema
+
+# Generated from apps/web/.env.schema by varlock codegen
+apps/web/src/env.d.ts

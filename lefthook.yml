@@ -1,5 +1,8 @@
 pre-commit:
   jobs:
+    # Blocks commits containing a sensitive value from the web app's env.
+    - name: secrets
+      run: bunx varlock scan --path apps/web/ {staged_files}
     - run: bunx ultracite fix {staged_files}
       glob:
         - "*.js"
