@@ -29,7 +29,7 @@
     "db:studio": "bun run --filter @app/db db:studio",
     "deploy:logs": "bun scripts/deploy-logs.ts",
     "deploy:setup": "vercel link",
-    "dev": "bun run --filter @app/web dev",
+    "dev": "bun run --cwd apps/web dev",
     "env:preview": "bun scripts/sync-vercel-env.ts preview",
     "env:production": "bun scripts/sync-vercel-env.ts production",
     "fix": "ultracite fix",
