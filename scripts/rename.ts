@@ -42,5 +42,7 @@ const changed = results.filter(Boolean).length;
 
 await $`rm ${import.meta.path}`;
 await $`bun install`.quiet();
+// The new name sorts and wraps differently, so reorder imports and reformat.
+await $`bun run fix`.quiet();
 console.log(`Renamed the project to ${name} in ${changed} files.`);
 console.log("Review the diff, then commit it. This script deleted itself.");
