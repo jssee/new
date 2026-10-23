@@ -11,7 +11,7 @@
 - `bun run check` verifies a change: lint, format, type checks, and an env audit. Run it before you finish; it must pass.
 - `bun run fix` applies safe lint and format fixes.
 - `bun run dev` serves the web app through Portless at `https://app.localhost`, or `https://<branch>.app.localhost` in a linked worktree. The dev script prints the URL; never hardcode a port or `localhost:<port>`.
-- In an Amp orb, the dev server is the `web` service in `.amp/services.yaml`: start it with `amp orb services ensure`, not `bun run dev`. It serves both `https://app.localhost` and the portal URL.
+- In an Amp orb, the dev server is the `web` service in `.amp/services.yaml`: start it with `amp orb services ensure`, not `bun run dev`. It serves both `https://app.localhost` and the portal URL. Read its request logs with `amp orb service logs web`.
 - If `bun run dev` fails with "Proxy is not running", the Portless proxy isn't installed on this machine. It needs sudo, so ask the user to run `bunx portless service install` once; meanwhile `PORTLESS=0 bun run dev` serves plain Vite.
 - `bun run db:migrate` starts the local Postgres container if needed, creates this checkout's database, and applies migrations. Run it in a fresh checkout or worktree and after pulling migrations. `bun run db:reset` drops and recreates the local database.
 - Local databases are seeded with a user: sign in as `dev@example.com` with password `password`.

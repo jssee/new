@@ -17,6 +17,7 @@
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "better-auth": "catalog:",
+    "evlog": "catalog:",
     "valibot": "catalog:"
   },
   "devDependencies": {

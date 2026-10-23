@@ -19,6 +19,7 @@
     "@orpc/server": "catalog:",
     "@orpc/valibot": "catalog:",
     "better-auth": "catalog:",
+    "evlog": "catalog:",
     "valibot": "catalog:",
     "varlock": "catalog:"
   },

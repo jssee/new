@@ -3,7 +3,8 @@
 This package is contract-first oRPC v2 with Valibot, plus the Better Auth config.
 
 - Change the API in this order: schemas in `src/schema.ts`, the procedure's contract in `src/contract.ts`, then its handler in `src/router.ts`. Every procedure declares `.input` (if it takes any) and `.output`, plus `openapi({ method, path })` metadata.
-- The initial context is `{ db, session }`, supplied by `apps/web/src/lib/server/api.ts`. This package never reads env vars.
+- The initial context is `{ db, log, session }`, supplied by `apps/web/src/lib/server/api.ts`. This package never reads env vars.
+- `log` is the request's evlog event. Enrich it with `context.log.set({ feature: { ... } })`. The router-level `evlog()` middleware already records the procedure name and any thrown error; never add it to a procedure too, or it runs twice.
 - Implement public procedures on `os`. When the first procedure needs a signed-in user, add the oRPC docs' auth middleware to `src/router.ts` and implement signed-in procedures on `authed`:
 
   ```ts
