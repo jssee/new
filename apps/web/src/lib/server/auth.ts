@@ -1,4 +1,4 @@
-import { createAuth } from "@app/auth";
+import { createAuth } from "@app/api/auth";
 import { sveltekitCookies } from "better-auth/svelte-kit";
 import { ENV } from "varlock/env";
 import { getRequestEvent } from "$app/server";

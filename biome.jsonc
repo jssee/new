@@ -18,7 +18,7 @@
                     "message": "The web app reaches the database only through the API: call a procedure from a remote function."
                   },
                   {
-                    "group": ["@app/api", "@app/api/*", "**/server/api*"],
+                    "group": ["@app/api", "**/server/api*"],
                     "message": "Call API procedures only from remote functions (*.remote.ts)."
                   }
                 ]

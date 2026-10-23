@@ -2,7 +2,7 @@
 // tables in packages/db. Generating never connects to the database.
 import { createDb } from "@app/db";
 
-import { createAuth } from "./src/index.ts";
+import { createAuth } from "./src/auth.ts";
 
 export const auth = createAuth({
   allowedHosts: ["localhost"],

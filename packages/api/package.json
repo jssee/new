@@ -4,21 +4,24 @@
   "type": "module",
   "exports": {
     ".": "./src/router.ts",
+    "./auth": "./src/auth.ts",
     "./schema": "./src/schema.ts"
   },
   "scripts": {
+    "auth:schema": "auth generate --config auth.config.ts --output ../db/src/schema/auth.ts --yes",
     "check": "tsc --noEmit"
   },
   "dependencies": {
-    "@app/auth": "workspace:*",
     "@app/db": "workspace:*",
     "@orpc/contract": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
+    "better-auth": "catalog:",
     "valibot": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "^1.4.4",
+    "auth": "^1.7.12",
     "typescript": "catalog:"
   }
 }

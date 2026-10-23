@@ -1,6 +1,6 @@
-import type { Session } from "@app/auth";
 import type { Db } from "@app/db";
 import { implement } from "@orpc/server";
+import type { Session } from "./auth.ts";
 
 import { contract } from "./contract.ts";
 
