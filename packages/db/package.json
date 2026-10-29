@@ -1,0 +1,29 @@
+{
+  "name": "@myapp/db",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts"
+  },
+  "scripts": {
+    "check": "tsc",
+    "db:generate": "varlock run --inject vars --path ../../apps/web/ --filter=DATABASE_URL -- drizzle-kit generate",
+    "db:migrate": "varlock run --inject vars --path ../../apps/web/ --filter=DATABASE_URL -- sh -c 'bun scripts/local.ts ensure && drizzle-kit migrate'",
+    "db:prune": "bun scripts/local.ts prune",
+    "db:push": "varlock run --inject vars --path ../../apps/web/ --filter=DATABASE_URL -- sh -c 'bun scripts/local.ts ensure --local && drizzle-kit push'",
+    "db:rehearse": "varlock run --inject vars --path ../../apps/web/ --filter=DATABASE_URL -- sh -c 'bun scripts/local.ts reset && drizzle-kit migrate'",
+    "db:stop": "docker compose stop",
+    "db:studio": "varlock run --inject vars --path ../../apps/web/ --filter=DATABASE_URL -- sh -c 'bun scripts/local.ts ensure && drizzle-kit studio'"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.4",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1",
+    "drizzle-kit": "^0.31.11",
+    "typescript": "catalog:",
+    "varlock": "catalog:"
+  }
+}

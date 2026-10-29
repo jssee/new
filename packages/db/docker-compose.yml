@@ -1,0 +1,24 @@
+# Local Postgres for every checkout of this repo. No port is published:
+# OrbStack serves it at postgres.myapp.orb.local, so projects never compete
+# for 5432. Each checkout gets its own database (scripts/local.ts).
+name: myapp
+
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      # Postgres 18+ keeps versioned data directories under /var/lib/postgresql.
+      - data:/var/lib/postgresql
+    healthcheck:
+      # Over TCP, so it waits for the real server rather than the socket-only
+      # server the image runs while initializing.
+      test: [ "CMD", "pg_isready", "-h", "127.0.0.1", "-U", "postgres" ]
+      # start_interval applies only within start_period, which Compose requires.
+      start_period: 30s
+      start_interval: 1s
+
+volumes:
+  data:

@@ -1,0 +1,8 @@
+pre-commit:
+  jobs:
+    - name: fix
+      run: bunx ultracite fix {staged_files}
+      glob: "*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,jsonc,css,scss,svelte,vue,astro,html,md,yaml,yml,graphql,gql,grit}"
+      stage_fixed: true
+    - name: secrets
+      run: bunx varlock scan --path apps/web/ {staged_files}

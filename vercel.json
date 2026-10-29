@@ -1,0 +1,10 @@
+{
+  "services": {
+    "web": {
+      "root": "apps/web",
+      "framework": "sveltekit",
+      "installCommand": "cd ../.. && bun install"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": { "service": "web" } }]
+}

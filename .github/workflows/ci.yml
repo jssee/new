@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+# Pull requests cancel their superseded runs; main never cancels a running
+# check or migration.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run build
+
+  migrate:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - uses: actions/cache@v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: ${{ runner.os }}-bun-
+      - run: bun install --frozen-lockfile
+      # Step conditions can't read `secrets`, and only the migrate step gets the
+      # URL, so install scripts never see it. This step reports whether it's set.
+      - id: secret
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: echo "set=${DATABASE_URL:+true}" >> "$GITHUB_OUTPUT"
+      - name: Skip migrations without DATABASE_URL
+        if: steps.secret.outputs.set != 'true'
+        run: echo "::warning title=Migrations skipped::DATABASE_URL secret is not set, so production was not migrated."
+      - name: Migrate production
+        if: steps.secret.outputs.set == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: bun run db:migrate

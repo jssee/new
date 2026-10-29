@@ -1,0 +1,99 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite/biome/core", "ultracite/biome/svelte"],
+  "overrides": [
+    // App code reads configuration from `ENV` (varlock/env), which is validated
+    // against .env.schema, and packages receive it as arguments. Ultracite
+    // turns this rule off globally.
+    {
+      "includes": ["apps/web/src/**", "packages/*/src/**"],
+      "linter": { "rules": { "style": { "noProcessEnv": "error" } } }
+    },
+    // drizzle-kit writes these; a committed migration is never edited.
+    {
+      "includes": ["packages/db/migrations/**"],
+      "linter": { "enabled": false },
+      "formatter": { "enabled": false },
+      "assist": { "enabled": false }
+    },
+    // Drizzle creates columns in key order, so sorting keys would alphabetize
+    // every table's columns.
+    {
+      "includes": ["packages/db/src/schema/**"],
+      "assist": { "actions": { "source": { "useSortedKeys": "off" } } }
+    },
+    // Web adapts; API decides. Only the API package queries the database, and
+    // only remote functions call procedures. Each later override replaces this
+    // pattern list rather than merging with it, so the `$env` group repeats.
+    {
+      "includes": ["apps/web/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@myapp/db", "@myapp/db/*", "**/server/db*"],
+                    "message": "Reach the database through the API."
+                  },
+                  {
+                    "group": ["@myapp/api", "**/server/api*"],
+                    "message": "Call procedures only from remote functions."
+                  },
+                  {
+                    "group": ["$env/**"],
+                    "message": "Read config from `varlock/env`."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/**/*.remote.ts", "apps/web/src/routes/api/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@myapp/db", "@myapp/db/*", "**/server/db*"],
+                    "message": "Reach the database through the API."
+                  },
+                  {
+                    "group": ["$env/**"],
+                    "message": "Read config from `varlock/env`."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    // The server wiring: the one pool and the in-process API client.
+    {
+      "includes": [
+        "apps/web/src/lib/server/api.ts",
+        "apps/web/src/lib/server/db.ts"
+      ],
+      "linter": { "rules": { "style": { "noRestrictedImports": "off" } } }
+    },
+    // The shadcn-svelte CLI owns these files; lint findings there can only be
+    // fixed by hand-editing generated code. Keep this override last so it wins.
+    {
+      "includes": [
+        "apps/web/src/lib/components/ui/**",
+        "apps/web/src/lib/utils.ts"
+      ],
+      "linter": { "enabled": false },
+      "assist": { "enabled": false }
+    }
+  ]
+}

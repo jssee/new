@@ -1,0 +1,53 @@
+{
+  "name": "@myapp/web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#lib/*": "./src/lib/*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "check": "varlock codegen && varlock audit -i .svelte-kit -i .vercel . ../../packages/db && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "dev": "portless",
+    "dev:vite": "vite dev",
+    "env:check": "varlock load --agent",
+    "prepare": "svelte-kit sync || echo ''",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@myapp/api": "workspace:*",
+    "@myapp/db": "workspace:*",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/valibot": "catalog:",
+    "evlog": "catalog:",
+    "valibot": "catalog:",
+    "varlock": "catalog:"
+  },
+  "devDependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@internationalized/date": "^3.12.0",
+    "@lucide/svelte": "^1.61.0",
+    "@sveltejs/adapter-vercel": "^7.0.0",
+    "@sveltejs/kit": "^3.0.0",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "@varlock/vite-integration": "catalog:",
+    "bits-ui": "^2.20.0",
+    "cn": "^0.5.0",
+    "shadcn-svelte": "^1.7.1",
+    "svelte": "^5.57.1",
+    "svelte-check": "^4.6.0",
+    "tailwind-variants": "^3.3.1",
+    "tailwindcss": "^4.3.0",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "catalog:",
+    "vite": "^8.3.0"
+  },
+  "portless": {
+    "name": "myapp",
+    "script": "dev:vite"
+  }
+}

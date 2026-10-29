@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.base.json",
+  // An explicit empty list lets tsc pass while scripts/ has no files;
+  // without it, an empty include is error TS18003.
+  "files": [],
+  "include": ["scripts"]
+}
